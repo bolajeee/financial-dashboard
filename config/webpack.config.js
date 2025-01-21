@@ -185,6 +185,7 @@ module.exports = function (webpackEnv) {
     }
     return loaders;
   };
+   
 
   return {
     target: ['browserslist'],
@@ -229,6 +230,17 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
+     resolve: {
+  fallback: {
+    "path": false,
+    "os": false,
+    "fs": false,
+    "crypto": false,
+    "buffer": false,
+    "util": false,
+    "stream": false
+  }
+},
     cache: {
       type: 'filesystem',
       version: createEnvironmentHash(env.raw),
@@ -320,21 +332,15 @@ module.exports = function (webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
       },
-      plugins: [
-        // Prevents users from importing files from outside of src/ (or node_modules/).
-        // This often causes confusion because we only process files within src/ with babel.
-        // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
-        // please link the files into your node_modules/ and let module-resolution kick in.
-        // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [
-          paths.appPackageJson,
-          reactRefreshRuntimeEntry,
-          reactRefreshWebpackPluginRuntimeEntry,
-          babelRuntimeEntry,
-          babelRuntimeEntryHelpers,
-          babelRuntimeRegenerator,
-        ]),
-      ],
+      fallback: {
+        "path": false,
+        "os": false,
+        "fs": false,
+        "crypto": false,
+        "buffer": false,
+        "util": false,
+        "stream": false
+      }
     },
     module: {
       strictExportPresence: true,
@@ -752,4 +758,5 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+  
 };

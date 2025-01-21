@@ -1,20 +1,33 @@
+// filepath: /C:/Users/user/Documents/financial-dashboard/src/components/PriceChart.js
 import React from "react";
 import { Line } from "react-chartjs-2";
+import styled from "styled-components";
+
+const ChartContainer = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+`;
 
 const PriceChart = ({ prices }) => {
-  const chartData = {
-    labels: prices.map((point) => point.date),
+  const data = {
+    labels: prices.map((price) => price.date),
     datasets: [
       {
-        label: "Price Trend",
-        data: prices.map((point) => point.price),
-        borderColor: "rgba(75, 192, 192, 1)",
+        label: "Price",
+        data: prices.map((price) => price.price),
         fill: false,
+        backgroundColor: "blue",
+        borderColor: "blue",
       },
     ],
   };
 
-  return <Line data={chartData} />;
+  return (
+    <ChartContainer>
+      <Line data={data} />
+    </ChartContainer>
+  );
 };
 
 export default PriceChart;
