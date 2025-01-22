@@ -1,5 +1,5 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -35,6 +35,11 @@ const RateCard = styled.div`
   &:hover {
     transform: translateY(-5px);
   }
+
+  @media (max-width: 600px) {
+    min-width: 150px;
+    padding: 15px;
+  }
 `;
 
 const CurrencyName = styled.h3`
@@ -48,13 +53,17 @@ const RateValue = styled.p`
   font-weight: 500;
 `;
 
-const ExchangeRates = ({ rates }) => {
+const ExchangeRates = ({ rates = {} }) => {
+  if (Object.keys(rates).length === 0) {
+    return <p>No exchange rates available.</p>;
+  }
+
   return (
     <CarouselContainer>
       {Object.entries(rates).map(([currency, rate]) => (
         <RateCard key={currency}>
           <CurrencyName>{currency}</CurrencyName>
-          <RateValue>{rate.toFixed(4)}</RateValue>
+          <RateValue>{typeof rate === "number" ? rate.toFixed(4) : "N/A"}</RateValue>
         </RateCard>
       ))}
     </CarouselContainer>

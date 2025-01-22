@@ -11,14 +11,19 @@ const Select = styled.select`
   margin: 10px 0;
 `;
 
-const CurrencySelector = ({ selectedCurrency, onCurrencyChange, currencies }) => (
-  <Select value={selectedCurrency} onChange={(e) => onCurrencyChange(e.target.value)}>
-    {Object.keys(currencies).map(currency => (
-      <option key={currency} value={currency}>
-        {currency}
-      </option>
-    ))}
-  </Select>
-);
+const CurrencySelector = ({ selectedCurrency, onCurrencyChange, currencies = {} }) => {
+  // Ensure currencies is a valid object
+  const currencyKeys = currencies && typeof currencies === 'object' ? Object.keys(currencies) : [];
+
+  return (
+    <Select value={selectedCurrency} onChange={(e) => onCurrencyChange(e.target.value)}>
+      {currencyKeys.map((currency) => (
+        <option key={currency} value={currency}>
+          {currency}
+        </option>
+      ))}
+    </Select>
+  );
+};
 
 export default CurrencySelector;
