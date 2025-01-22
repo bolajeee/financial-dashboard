@@ -1,67 +1,91 @@
-// filepath: /C:/Users/user/Documents/financial-dashboard/src/components/PriceDisplay.js
 import React from "react";
 import styled from "styled-components";
 
 const DisplayContainer = styled.div`
   display: flex;
-  overflow-x: auto;
-  gap: 20px;
+  flex-direction: column;
+  width: 100%;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  background: ${({ theme }) => theme.cardBg};
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   margin: 20px 0;
-  
-  &::-webkit-scrollbar {
-    height: 8px;
+`;
+
+const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const StatCard = styled.div`
+  background: ${({ theme }) => theme.background};
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+
+  h3 {
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 10px;
+    font-size: 1.1em;
   }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+
+  p {
+    color: ${({ theme }) => theme.text};
+    font-size: 1.3em;
+    font-weight: 600;
   }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+
+  &:hover {
+    transform: translateY(-5px);
   }
 `;
 
-const CryptoCard = styled.div`
-  min-width: 280px;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
-  h2 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-  }
-  
-  p {
-    margin: 10px 0;
-    font-size: 1.1em;
-    
-    &.price {
-      font-size: 1.4em;
-      font-weight: bold;
-      color: #2c3e50;
-    }
-    
-    &.change {
-      color: ${props => props.priceChange >= 0 ? '#2ecc71' : '#e74c3c'};
-    }
-  }
+const Title = styled.h2`
+  color: ${({ theme }) => theme.text};
+  font-size: 2em;
+  margin-bottom: 20px;
 `;
+
 const PriceDisplay = ({ data }) => {
+  if (!data) return null;
+
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 2,
+    }).format(num);
+  };
+
   return (
     <DisplayContainer>
-      <h2>{data.name}</h2>
-      <p>Current Price: ${data.current_price}</p>
-      <p>24-hour Change: {data.price_change_percentage_24h}%</p>
-      <p>Market Cap: ${data.market_cap}</p>
-      <p>Trading Volume: ${data.total_volume}</p>
+      <Title>{data.name}</Title>
+      <StatsGrid>
+        <StatCard>
+          <h3>Current Price</h3>
+          <p>{formatNumber(data.current_price)}</p>
+        </StatCard>
+        <StatCard>
+          <h3>24h Change</h3>
+          <p
+            style={{
+              color:
+                data.price_change_percentage_24h >= 0
+                  ? ({ theme }) => theme.success
+                  : ({ theme }) => theme.error,
+            }}
+          >
+            {data.price_change_percentage_24h?.toFixed(2)}%
+          </p>
+        </StatCard>
+        <StatCard>
+          <h3>Market Cap</h3>
+          <p>{formatNumber(data.market_cap)}</p>
+        </StatCard>
+      </StatsGrid>
     </DisplayContainer>
   );
 };
