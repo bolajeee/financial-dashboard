@@ -1,41 +1,40 @@
+import axios from 'axios';
 
-import axios from "axios";
+  const api = axios.create({
+    baseURL: 'https://api.coincap.io/v2',
+    timeout: 10000,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  });
 
+  export const fetchCryptoData = async (query) => {
+    const { data } = await api.get(`/assets/${query}`);
+    return [{
+      name: data.data.name,
+      current_price: parseFloat(data.data.priceUsd),
+      price_change_percentage_24h: parseFloat(data.data.changePercent24Hr),
+      market_cap: parseFloat(data.data.marketCapUsd),
+      id: data.data.id
+    }];
+  };
 
+  export const fetchPriceHistory = async (coinId) => {
+    const { data } = await api.get(`/assets/${coinId}/history?interval=h1`);
+    return data.data.map(point => ({
+      date: new Date(point.time).toLocaleDateString(),
+      price: parseFloat(point.priceUsd)
+    }));
+  };
 
-const CRYPTO_API_URL = "https://api.coingecko.com/api/v3";
-const EXCHANGE_RATE_API_URL =
-  "https://v6.exchangerate-api.com/v6/3ffdd12e8ee730625a99b4bd/latest/USD"; 
-
-  const COINGECKO_API_KEY = "CG-FtKXdVtrDRiR26MBKEvj1mYN"
-
-
-// Fetch cryptocurrency data
-export const fetchCryptoData = async (query) => {
-  try {
-    const response = await axios.get(`${CRYPTO_API_URL}/coins/markets`, {
-      params: {
-        vs_currency: "usd",
-        ids: query,
-      },
-      headers: {
-        Authorization: `Bearer ${COINGECKO_API_KEY}`,
-      },
+  export const fetchExchangeRates = async () => {
+    const { data } = await api.get('/rates');
+    const rates = {};
+    data.data.forEach(rate => {
+      if (rate.type === 'fiat') {
+        rates[rate.symbol] = parseFloat(rate.rateUsd);
+      }
     });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching cryptocurrency data:", error);
-    throw error;
-  }
-};
-
-// Fetch exchange rates
-export const fetchExchangeRates = async () => {
-  try {
-    const response = await axios.get(EXCHANGE_RATE_API_URL);
-    return response.data.conversion_rates;
-  } catch (error) {
-    console.error("Error fetching exchange rates:", error);
-    throw error;
-  }
-};
+    return rates;
+  };

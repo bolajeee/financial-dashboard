@@ -3,10 +3,57 @@ import React from "react";
 import styled from "styled-components";
 
 const DisplayContainer = styled.div`
-  text-align: center;
-  margin-top: 20px;
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  margin: 20px 0;
+  
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
 `;
 
+const CryptoCard = styled.div`
+  min-width: 280px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  
+  p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    
+    &.price {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    
+    &.change {
+      color: ${props => props.priceChange >= 0 ? '#2ecc71' : '#e74c3c'};
+    }
+  }
+`;
 const PriceDisplay = ({ data }) => {
   return (
     <DisplayContainer>

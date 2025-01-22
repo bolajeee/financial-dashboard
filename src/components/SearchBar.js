@@ -35,6 +35,8 @@ const SearchBar = ({ onSearch }) => {
   const handleSearch = () => {
     onSearch(query);
   };
+  
+  console.log(query)
 
   return (
     <SearchContainer>
