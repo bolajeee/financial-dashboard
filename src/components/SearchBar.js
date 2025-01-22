@@ -99,7 +99,7 @@ const SearchBar = ({ onSearch }) => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           placeholder="Search for cryptocurrency..."
         />
         <Button onClick={handleSearch}>Search</Button>
