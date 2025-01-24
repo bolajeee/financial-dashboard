@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme, GlobalStyle } from "./theme/ThemeProvider";
 import CurrencySelector from "./components/CurrencySelector";
-import ComparisonChart from "./components/ComparisonChart";
 import SearchBar from "./components/SearchBar";
 import PriceDisplay from "./components/PriceDisplay";
 import PriceChart from "./components/PriceChart";
